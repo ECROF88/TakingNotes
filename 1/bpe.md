@@ -121,3 +121,25 @@ byte   8 → Unicode 264 → 'Ĉ' (U+0108)
 byte   9 → Unicode 265 → 'ĉ' (U+0109)
 byte  10 → Unicode 266 → 'Ċ' (U+010A)
 ```
+
+接下来根据两个核心产物merges(rules) 和 vocab(id->Token)
+
+encoder_map:接下来需要将token的字节序列映射为id
+decoder_map:逆映射，需要将id映射回去字节序列
+
+Bpe Ranks: Map<(bytes,bytes),int> key是一个pair，value是在merge列表中的索引，表示优先级，越小越好
+
+encode过程：
+先进行pre-tokenization 使用正则表达式切分文本为基础单元
+然后映射为字节
+然后对于每个子串进行迭代合并：对于一个子串，找出里面最优的best_pair，然后进行合并处理
+，然后将剩下的符号映射为id
+
+decode过程：
+将id列表转换为token列表，然后拼接，然后将unicode字符映射回原始的byte值
+然后对这个byte数组进行解码，使用error='replace'来处理无效序列
+
+在大模型训练中，我们不会直接读取文本文件，
+文本解析慢，Python 对象内存占用大。
+所以对整个数据集进行Tokenize，转换为uint16的紧致的二进制文件`.bin`
+

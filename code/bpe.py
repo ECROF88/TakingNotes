@@ -1,11 +1,13 @@
+from typing import Iterable
 
-def train(
-    input_file:str,
-    vocab_size:int,
-    special_tokens:list[str],
-):
-    vocab = {i:bytes([i]) for i in range(256)}
+for pre_token in pre_tokens:
+    bytes_part = [bytes([b]) for b in pre_token.encode("utf-8")]
     
-    # 256 是基础字节，0-1 a-z A-Z 等等
-    # vocab_size = 256 + len(special_tokens) + new_tokens_to_add
-    num_merges = vocab_size - 256 - len(special_tokens)
+    
+    
+def encode_iterable(self, iterable: Iterable[str]) -> Iterable[int]:
+    """
+    内存高效的迭代编码器
+    """
+    for chunk in iterable:
+        yield from self.encode(chunk)
