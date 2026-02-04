@@ -143,3 +143,11 @@ decode过程：
 文本解析慢，Python 对象内存占用大。
 所以对整个数据集进行Tokenize，转换为uint16的紧致的二进制文件`.bin`
 
+一些注意事项需要思考，gemini说的，需要人工校对：
+1. 在 Encode 过程中，同一个单词（如 "the", "coding"）会被多次计算 BPE。 使用 cache = {} 记录 raw_word -> bpe_tokens。如果单词出现过，直接查表返回结果，跳过 BPE 合并循环。
+2. Python 的 re 模块在处理超大文本时可能较慢，可能需要一些别的库来实现并行化处理
+3. 词表大小权衡
+太小: 导致序列变长（每个单词被切得更碎），模型上下文窗口能包含的信息变少，计算量增加（Attention 是序列长度的平方复杂度）。
+太大: Embedding 层参数量巨大（vocab_size * hidden_dim），且稀疏词汇可能训练不充分。
+GPT-4 的 cl100k_base 约为 100k，GPT-2 为 50k。
+
