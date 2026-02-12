@@ -61,3 +61,9 @@ Do We Reallly Need Packing in LLM SFT
 3. 多轮合并加速计算，可以将3轮样本合并为一个样本。
     但是缺点是因为计算CE的时候，使用reduction为mean时候，loss会使得输出较短的权重降低了所以短输出的数据训练不充分
     所以需要自己设计损失函数
+
+instruction mining: instrcution data selection for tuning large language models
+
+
+
+K-Center-Greedy本质：一种最大最小覆盖的贪婪策略，通过每次选择距离现有中心最远的点，逐步构建能覆盖整个数据集的代表性点集。
